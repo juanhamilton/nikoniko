@@ -1,5 +1,28 @@
 {
   "teams": {
-
+    "Robotica": {
+      "password": "123456",
+      "members": [
+        "Juan",
+        "Felipe",
+        "Hector",
+        "Alan",
+        "Tracy",
+        "Maria Jose",
+        "Rafa",
+        "Jorge",
+        "Cristian",
+        "Jose",
+        "Alvaro",
+        "Miguel",
+        "Carola",
+        "Claudio"
+      ],
+      "moods": {
+        "2026-4-7": {
+          "Juan": "super-happy"
+        }
+      }
+    }
   }
 }
