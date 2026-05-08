@@ -1,0 +1,60 @@
+{
+  "teams": {
+    "General": {
+      "members": [
+        "Juan",
+        "María",
+        "Pedro",
+        "Ana",
+        "TestUser",
+        "Juanito"
+      ],
+      "moods": {
+        "2026-4-7": {
+          "Juan": "happy",
+          "María": "neutral",
+          "Pedro": "happy"
+        },
+        "2026-4-1": {
+          "María": "neutral",
+          "Juan": "happy"
+        }
+      }
+    },
+    "Robotica": {
+      "password": "123456",
+      "members": [
+        "Juan",
+        "Cristian",
+        "Tracy",
+        "Hector",
+        "luis"
+      ],
+      "moods": {
+        "2026-4-7": {
+          "Juan": "happy",
+          "Tracy": "neutral",
+          "Cristian": "sad",
+          "Hector": "super-sad"
+        },
+        "2026-4-8": {
+          "Hector": "neutral",
+          "Cristian": "super-happy"
+        },
+        "2026-4-9": {
+          "Cristian": "sad",
+          "Juan": "happy"
+        },
+        "2026-4-10": {
+          "Cristian": "super-sad",
+          "Juan": "super-sad"
+        }
+      }
+    },
+    "robotica": {
+      "password": "123456",
+      "members": [],
+      "moods": {}
+    }
+  }
+}

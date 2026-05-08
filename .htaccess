@@ -1,0 +1,22 @@
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home/juanverd/public_html/nikoniko"
+PassengerBaseURI "/nikoniko"
+PassengerNodejs "/home/juanverd/nodevenv/public_html/nikoniko/22/bin/node"
+PassengerAppType node
+PassengerStartupFile server.js
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
+# Configuración para Node.js Selector en cPanel
+<IfModule mod_passenger.c>
+    PassengerAppRoot "/home/juanverdugo/public_html/nikoniko"
+    PassengerBaseURI "/nikoniko"
+    PassengerAppType node
+    PassengerStartupFile server.js
+    PassengerAppEnv production
+</IfModule>
+# Evitar listado de directorios
+Options -Indexes
+RewriteEngine On
+# Si el archivo no existe en dist/, pasar la petición a Node.js
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ server.js [L]
