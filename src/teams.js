@@ -20,8 +20,8 @@ export const teams = {
       });
       return await response.json();
     } catch (error) {
-      console.error('Error authenticating team:', error);
-      return { error: 'Connection error' };
+      console.error('Error al autenticar el equipo:', error);
+      return { error: 'Error de conexión' };
     }
   },
 

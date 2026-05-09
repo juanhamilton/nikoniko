@@ -96,7 +96,7 @@ async function updateUI() {
   // Attempt to sync (validates password)
   const fetchedMoods = await storage.getAll(currentTeam, currentPassword);
   
-  if (fetchedMoods.error === 'Invalid team password' || fetchedMoods.error === 'Unauthorized') {
+  if (fetchedMoods.error === 'Contraseña inválida' || fetchedMoods.error === 'No autorizado') {
     alert('Sesión expirada o contraseña inválida.');
     currentTeam = null;
     currentPassword = null;
@@ -425,4 +425,4 @@ currentTeam = saved.team;
 currentPassword = saved.password;
 currentWeekStart = getWeekStart(new Date(), weekStartDay);
 updateUI();
-console.log('Secure Multi-Team Niko-Niko Calendar Initialized');
+console.log('Calendario Niko-Niko Multiequipo Seguro Inicializado');

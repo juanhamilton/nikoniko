@@ -36,8 +36,8 @@ async function validateTeam(req, res, next) {
   const { teamId } = req.params;
   const pw = req.headers['x-team-password'];
   const team = await teams().findOne({ _id: teamId });
-  if (!team) return res.status(404).json({ error: 'Not found' });
-  if (team.password && team.password !== pw) return res.status(401).json({ error: 'Unauthorized' });
+  if (!team) return res.status(404).json({ error: 'No encontrado' });
+  if (team.password && team.password !== pw) return res.status(401).json({ error: 'No autorizado' });
   req.team = team;
   next();
 }
@@ -65,7 +65,7 @@ api.post('/teams/:teamId', async (req, res) => {
     if (existing) {
       return existing.password === password
         ? res.json({ success: true })
-        : res.status(401).json({ error: 'Invalid password' });
+        : res.status(401).json({ error: 'Contraseña inválida' });
     }
 
     await teams().insertOne({ _id: teamId, password: password || null, members: [], moods: {} });
