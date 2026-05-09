@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Niko-Niko Calendar | Team Happiness</title>
+    <meta name="description" content="A premium Niko-Niko Calendar to track team mood and productivity daily." />
+  </head>
+  <body>
+    <div id="app">
+      <!-- TEAM SELECTION OVERLAY -->
+      <div id="teamOverlay" class="team-overlay active">
+        <div class="modal-content team-modal">
+          <h2>Bienvenido a Niko-Niko</h2>
+          <p>Crea un nuevo equipo o únete a uno existente</p>
+          
+          <div class="team-actions">
+            <div class="action-group-vertical">
+              <input type="text" id="newTeamInput" placeholder="Nombre del nuevo equipo" />
+              <input type="password" id="newTeamPassword" placeholder="Contraseña del equipo" />
+              <button id="createTeamBtn" class="nav-btn primary">Crear / Unirse</button>
+            </div>
+            
+            <div class="divider"><span>O SELECCIONA EXISTENTE</span></div>
+            
+            <div id="existingTeamsList" class="existing-teams">
+              <!-- Cargado dinámicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <header>
+        <div class="team-header">
+          <span id="currentTeamDisplay" class="current-team-name">Cargando...</span>
+          <button id="changeTeamBtn" class="change-team-link">Cambiar Equipo</button>
+        </div>
+        <h1>Niko-Niko</h1>
+        <p class="subtitle">Rastrea la felicidad de tu equipo día a día</p>
+        
+        <div class="user-selector-container">
+          <label for="userSelect">¿Quién eres?</label>
+          <select id="userSelect" class="user-select">
+            <!-- Cargado dinámicamente -->
+          </select>
+        </div>
+
+        <nav class="app-nav">
+          <button class="nav-tab active" data-tab="calendar">Calendario</button>
+          <button class="nav-tab" data-tab="report">Reporte Semanal</button>
+          <button class="nav-tab" data-tab="members">Equipo</button>
+          <button class="nav-tab" data-tab="roulette">🎰 Sorteo</button>
+          <button class="nav-tab" data-tab="points">🏅 Puntos</button>
+        </nav>
+      </header>
+
+      <main>
+        <!-- CALENDAR TAB -->
+        <section id="calendarTab" class="tab-content active">
+          <div class="calendar-container">
+            <div class="calendar-header">
+              <h2 id="currentMonth" class="current-month">Mayo 2026</h2>
+              <div class="calendar-header-controls">
+                <div class="week-start-selector">
+                  <label for="weekStartSelect">Semana desde:</label>
+                  <select id="weekStartSelect" class="user-select week-start-select">
+                    <option value="1">Lunes</option>
+                    <option value="2">Martes</option>
+                    <option value="3">Miércoles</option>
+                    <option value="4">Jueves</option>
+                    <option value="5">Viernes</option>
+                    <option value="6">Sábado</option>
+                    <option value="0">Domingo</option>
+                  </select>
+                </div>
+                <div class="nav-buttons">
+                  <button id="prevMonth" class="nav-btn">Anterior</button>
+                  <button id="nextMonth" class="nav-btn">Siguiente</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="calendarGrid" class="calendar-grid">
+              <!-- Encabezados generados dinámicamente -->
+            </div>
+          </div>
+
+          <div class="stats-container">
+            <div class="stat-card">
+              <div id="superHappyCount" class="stat-value" style="color: var(--mood-super-happy)">0</div>
+              <div class="stat-label">Muy Felices</div>
+            </div>
+            <div class="stat-card">
+              <div id="happyCount" class="stat-value" style="color: var(--mood-happy)">0</div>
+              <div class="stat-label">Felices</div>
+            </div>
+            <div class="stat-card">
+              <div id="neutralCount" class="stat-value" style="color: var(--mood-neutral)">0</div>
+              <div class="stat-label">Neutrales</div>
+            </div>
+            <div class="stat-card">
+              <div id="sadCount" class="stat-value" style="color: var(--mood-sad)">0</div>
+              <div class="stat-label">Mal</div>
+            </div>
+            <div class="stat-card">
+              <div id="superSadCount" class="stat-value" style="color: var(--mood-super-sad)">0</div>
+              <div class="stat-label">Muy Mal</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- REPORT TAB -->
+        <section id="reportTab" class="tab-content">
+          <div class="report-container">
+            <div class="calendar-header">
+              <h2 id="reportWeekLabel" class="current-month">Reporte Semanal</h2>
+              <div class="calendar-header-controls">
+                <div class="week-start-selector">
+                  <label for="reportWeekStartSelect">Semana desde:</label>
+                  <select id="reportWeekStartSelect" class="user-select week-start-select">
+                    <option value="1">Lunes</option>
+                    <option value="2">Martes</option>
+                    <option value="3">Miércoles</option>
+                    <option value="4">Jueves</option>
+                    <option value="5">Viernes</option>
+                    <option value="6">Sábado</option>
+                    <option value="0">Domingo</option>
+                  </select>
+                </div>
+                <div class="nav-buttons">
+                  <button id="prevWeek" class="nav-btn">Semana Anterior</button>
+                  <button id="nextWeek" class="nav-btn">Siguiente Semana</button>
+                </div>
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table id="weeklyReportTable" class="report-table">
+                <thead>
+                  <tr id="reportHeader">
+                    <th>Integrante</th>
+                    <!-- Días cargados dinámicamente -->
+                  </tr>
+                </thead>
+                <tbody id="reportEntries">
+                  <!-- Filas cargadas dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- MEMBERS TAB -->
+        <section id="membersTab" class="tab-content">
+          <div class="members-container">
+            <h3>Gestionar Equipo</h3>
+            <div class="add-member-form">
+              <input type="text" id="newMemberName" placeholder="Nombre del nuevo integrante" />
+              <button id="addMemberBtn" class="nav-btn primary">Agregar</button>
+            </div>
+            <div class="members-list-wrapper">
+              <ul id="membersList" class="members-list">
+                <!-- Miembros cargados dinámicamente -->
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ROULETTE TAB -->
+        <section id="rouletteTab" class="tab-content">
+          <div class="roulette-container">
+            <div class="roulette-header">
+              <h2 class="current-month">Sorteo del Equipo</h2>
+              <p class="roulette-subtitle">Gira la ruleta para elegir un participante al azar</p>
+            </div>
+            <div class="roulette-wheel-wrapper">
+              <canvas id="rouletteCanvas" width="420" height="420"></canvas>
+            </div>
+            <div class="roulette-actions">
+              <button id="spinBtn" class="nav-btn primary spin-btn">🎰 ¡Girar!</button>
+              <button id="resetRouletteBtn" class="nav-btn reset-roulette-btn">🔄 Reiniciar</button>
+            </div>
+            <div id="rouletteCounter" class="roulette-counter"></div>
+            <div id="winnerDisplay" class="winner-display" style="display:none;">
+              <div class="winner-crown">🎉</div>
+              <div class="winner-label">¡El elegido es!</div>
+              <div id="winnerName" class="winner-name"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- POINTS TAB -->
+        <section id="pointsTab" class="tab-content">
+          <div class="points-container">
+            <div class="calendar-header">
+              <h2 class="current-month">🏅 Ranking de Puntos</h2>
+              <div class="nav-buttons">
+                <button id="prevPointsMonth" class="nav-btn">Anterior</button>
+                <button id="nextPointsMonth" class="nav-btn">Siguiente</button>
+              </div>
+            </div>
+            <div id="rankingContainer" class="ranking-container">
+              <!-- Cargado dinámicamente -->
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Modal para seleccionar humor -->
+      <div id="moodModal" class="modal">
+        <div class="modal-content">
+          <h3 class="modal-title">¿Cómo te sientes hoy?</h3>
+          <p id="modalDate" class="modal-date">7 de Mayo, 2026</p>
+          
+          <div class="mood-options">
+            <div class="mood-option super-happy" data-mood="super-happy">
+              <div class="emoji-circle">🤩</div>
+              <span class="mood-label">MUY FELIZ</span>
+            </div>
+            <div class="mood-option happy" data-mood="happy">
+              <div class="emoji-circle">😊</div>
+              <span class="mood-label">FELIZ</span>
+            </div>
+            <div class="mood-option neutral" data-mood="neutral">
+              <div class="emoji-circle">😐</div>
+              <span class="mood-label">NORMAL</span>
+            </div>
+            <div class="mood-option sad" data-mood="sad">
+              <div class="emoji-circle">☹️</div>
+              <span class="mood-label">MAL</span>
+            </div>
+            <div class="mood-option super-sad" data-mood="super-sad">
+              <div class="emoji-circle">😫</div>
+              <span class="mood-label">MUY MAL</span>
+            </div>
+          </div>
+          
+          <button id="closeModal" class="nav-btn" style="margin-top: 2rem; width: 100%">Cancelar</button>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

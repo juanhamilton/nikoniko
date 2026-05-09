@@ -1,77 +1,176 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
+const { MongoClient } = require('mongodb');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const DATA_FILE = path.join(__dirname, 'data.json');
+const MONGODB_URI = process.env.MONGODB_URI;
 const DIST = path.join(__dirname, 'dist');
 
+if (!MONGODB_URI) {
+  console.error('ERROR: MONGODB_URI no está definida en las variables de entorno.');
+  process.exit(1);
+}
+
+// ── Conexión a MongoDB ──────────────────────────────────────────────────────
+let db;
+const client = new MongoClient(MONGODB_URI);
+
+async function connectDB() {
+  await client.connect();
+  db = client.db('nikoniko');
+  console.log('Conectado a MongoDB Atlas ✓');
+}
+
+function teams() {
+  return db.collection('teams');
+}
+
+// ── Middleware ──────────────────────────────────────────────────────────────
 app.use(express.json());
 app.use(express.static(DIST));
 
-if (!fs.existsSync(DATA_FILE)) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify({ teams: {} }, null, 2));
-}
-
-function getData() { return JSON.parse(fs.readFileSync(DATA_FILE)); }
-function saveData(d) { fs.writeFileSync(DATA_FILE, JSON.stringify(d, null, 2)); }
-
-function validateTeam(req, res, next) {
+// ── Middleware de validación de equipo ──────────────────────────────────────
+async function validateTeam(req, res, next) {
   const { teamId } = req.params;
   const pw = req.headers['x-team-password'];
-  const data = getData();
-  const team = data.teams[teamId];
+  const team = await teams().findOne({ _id: teamId });
   if (!team) return res.status(404).json({ error: 'Not found' });
   if (team.password && team.password !== pw) return res.status(401).json({ error: 'Unauthorized' });
   req.team = team;
   next();
 }
 
+// ── Rutas API ───────────────────────────────────────────────────────────────
 const api = express.Router();
-api.get('/teams', (req, res) => res.json(Object.keys(getData().teams)));
-api.post('/teams/:teamId', (req, res) => {
-  const { teamId } = req.params;
-  const { password } = req.body;
-  const data = getData();
-  if (data.teams[teamId]) {
-    return data.teams[teamId].password === password
-      ? res.json({ success: true })
-      : res.status(401).json({ error: 'Invalid password' });
+
+// GET /api/teams — lista de nombres de equipos
+api.get('/teams', async (req, res) => {
+  try {
+    const allTeams = await teams().find({}, { projection: { _id: 1 } }).toArray();
+    res.json(allTeams.map(t => t._id));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-  data.teams[teamId] = { password, members: [], moods: {} };
-  saveData(data);
-  res.json({ success: true });
-});
-api.get('/:teamId/members', validateTeam, (req, res) => res.json(req.team.members));
-api.post('/:teamId/members', validateTeam, (req, res) => {
-  const { teamId } = req.params;
-  const { name } = req.body;
-  const data = getData();
-  if (!data.teams[teamId].members.includes(name)) data.teams[teamId].members.push(name);
-  saveData(data);
-  res.json({ success: true, members: data.teams[teamId].members });
-});
-api.delete('/:teamId/members/:name', validateTeam, (req, res) => {
-  const { teamId, name } = req.params;
-  const data = getData();
-  data.teams[teamId].members = data.teams[teamId].members.filter(m => m !== name);
-  saveData(data);
-  res.json({ success: true });
-});
-api.get('/:teamId/moods', validateTeam, (req, res) => res.json(req.team.moods));
-api.post('/:teamId/moods', validateTeam, (req, res) => {
-  const { teamId } = req.params;
-  const { dateStr, member, mood } = req.body;
-  const data = getData();
-  if (!data.teams[teamId].moods[dateStr]) data.teams[teamId].moods[dateStr] = {};
-  data.teams[teamId].moods[dateStr][member] = mood;
-  saveData(data);
-  res.json({ success: true });
 });
 
+// POST /api/teams/:teamId — crear o autenticar equipo
+api.post('/teams/:teamId', async (req, res) => {
+  try {
+    const { teamId } = req.params;
+    const { password } = req.body;
+    const existing = await teams().findOne({ _id: teamId });
+
+    if (existing) {
+      return existing.password === password
+        ? res.json({ success: true })
+        : res.status(401).json({ error: 'Invalid password' });
+    }
+
+    await teams().insertOne({ _id: teamId, password: password || null, members: [], moods: {} });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/:teamId/members
+api.get('/:teamId/members', validateTeam, (req, res) => {
+  res.json(req.team.members);
+});
+
+// POST /api/:teamId/members — agregar miembro
+api.post('/:teamId/members', validateTeam, async (req, res) => {
+  try {
+    const { teamId } = req.params;
+    const { name } = req.body;
+    const result = await teams().findOneAndUpdate(
+      { _id: teamId },
+      { $addToSet: { members: name } },
+      { returnDocument: 'after' }
+    );
+    res.json({ success: true, members: result.members });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE /api/:teamId/members/:name
+api.delete('/:teamId/members/:name', validateTeam, async (req, res) => {
+  try {
+    const { teamId, name } = req.params;
+    await teams().updateOne(
+      { _id: teamId },
+      { $pull: { members: name } }
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/:teamId/moods
+api.get('/:teamId/moods', validateTeam, (req, res) => {
+  res.json(req.team.moods);
+});
+
+// POST /api/:teamId/moods — registrar estado de ánimo
+api.post('/:teamId/moods', validateTeam, async (req, res) => {
+  try {
+    const { teamId } = req.params;
+    const { dateStr, member, mood } = req.body;
+    await teams().updateOne(
+      { _id: teamId },
+      { $set: { [`moods.${dateStr}.${member}`]: mood } }
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/:teamId/points?month=2026-5
+api.get('/:teamId/points', validateTeam, async (req, res) => {
+  try {
+    const { month } = req.query;
+    const pointsData = req.team.points || {};
+    res.json(month ? (pointsData[month] || {}) : pointsData);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/:teamId/points — { member, month, delta }
+api.post('/:teamId/points', validateTeam, async (req, res) => {
+  try {
+    const { teamId } = req.params;
+    const { member, month, delta } = req.body;
+    const field = `points.${month}.${member}`;
+
+    // Obtener valor actual para evitar negativos
+    const current = req.team.points?.[month]?.[member] ?? 0;
+    const newVal = Math.max(0, current + delta);
+    await teams().updateOne(
+      { _id: teamId },
+      { $set: { [field]: newVal } }
+    );
+    res.json({ success: true, value: newVal });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Montar API y fallback SPA ───────────────────────────────────────────────
 app.use('/api', api);
-
 app.get('*', (req, res) => res.sendFile(path.join(DIST, 'index.html')));
 
-app.listen(PORT, () => console.log('Niko-Niko OK en puerto ' + PORT));
+// ── Arrancar servidor tras conectar a MongoDB ───────────────────────────────
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => console.log(`Niko-Niko OK en puerto ${PORT}`));
+  })
+  .catch(err => {
+    console.error('Error al conectar a MongoDB:', err.message);
+    process.exit(1);
+  });
