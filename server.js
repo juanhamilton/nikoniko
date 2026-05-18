@@ -13,7 +13,7 @@ if (!MONGODB_URI) {
   process.exit(1);
 }
 
-// ── Conexión a MongoDB ──────────────────────────────────────────────────────
+// ── Conexión a MongoDB ────────────────────────────────────────────────────── 
 let db;
 const client = new MongoClient(MONGODB_URI);
 
