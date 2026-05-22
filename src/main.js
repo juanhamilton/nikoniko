@@ -159,7 +159,7 @@ async function updateUI() {
     const month = currentDate.getMonth();
     currentMonthLabel.textContent = `${monthNames[month]} ${year}`;
     
-    calendar.render(calendarGrid, year, month, allMoods, (y, m, d) => {
+    calendar.render(calendarGrid, year, month, allMoods, userSelect.value, (y, m, d) => {
       selectedDateStr = `${y}-${m}-${d}`;
       modalDateLabel.textContent = `${d} de ${monthNames[m]}, ${y}`;
       moodModal.classList.add('active');
@@ -352,6 +352,7 @@ userSelect.addEventListener('change', () => {
   if (currentTeam) {
     localStorage.setItem(`current_member_${currentTeam}`, userSelect.value);
   }
+  updateUI();
 });
 
 // Event Listeners - Calendar

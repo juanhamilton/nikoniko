@@ -996,3 +996,57 @@ button.nav-btn.export-btn:hover {
   color: #34d399;
   transform: translateY(-2px);
 }
+
+/* User Selection Day Backgrounds */
+.calendar-day.user-mood-super-happy {
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.18), rgba(34, 211, 238, 0.05)) !important;
+  border-color: rgba(34, 211, 238, 0.45) !important;
+  box-shadow: inset 0 0 12px rgba(34, 211, 238, 0.15);
+}
+.calendar-day.user-mood-happy {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(16, 185, 129, 0.05)) !important;
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  box-shadow: inset 0 0 12px rgba(16, 185, 129, 0.15);
+}
+.calendar-day.user-mood-neutral {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(245, 158, 11, 0.05)) !important;
+  border-color: rgba(245, 158, 11, 0.45) !important;
+  box-shadow: inset 0 0 12px rgba(245, 158, 11, 0.15);
+}
+.calendar-day.user-mood-sad {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.18), rgba(239, 68, 68, 0.05)) !important;
+  border-color: rgba(239, 68, 68, 0.45) !important;
+  box-shadow: inset 0 0 12px rgba(239, 68, 68, 0.15);
+}
+.calendar-day.user-mood-super-sad {
+  background: linear-gradient(135deg, rgba(127, 29, 29, 0.28), rgba(127, 29, 29, 0.1)) !important;
+  border-color: rgba(127, 29, 29, 0.55) !important;
+  box-shadow: inset 0 0 12px rgba(127, 29, 29, 0.2);
+}
+
+/* User Selection Day Hover Effects */
+.calendar-day.user-mood-super-happy:hover {
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.28), rgba(34, 211, 238, 0.1)) !important;
+  border-color: rgba(34, 211, 238, 0.65) !important;
+  box-shadow: inset 0 0 16px rgba(34, 211, 238, 0.25), 0 0 15px rgba(34, 211, 238, 0.35);
+}
+.calendar-day.user-mood-happy:hover {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.28), rgba(16, 185, 129, 0.1)) !important;
+  border-color: rgba(16, 185, 129, 0.65) !important;
+  box-shadow: inset 0 0 16px rgba(16, 185, 129, 0.25), 0 0 15px rgba(16, 185, 129, 0.35);
+}
+.calendar-day.user-mood-neutral:hover {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.28), rgba(245, 158, 11, 0.1)) !important;
+  border-color: rgba(245, 158, 11, 0.65) !important;
+  box-shadow: inset 0 0 16px rgba(245, 158, 11, 0.25), 0 0 15px rgba(245, 158, 11, 0.35);
+}
+.calendar-day.user-mood-sad:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.28), rgba(239, 68, 68, 0.1)) !important;
+  border-color: rgba(239, 68, 68, 0.65) !important;
+  box-shadow: inset 0 0 16px rgba(239, 68, 68, 0.25), 0 0 15px rgba(239, 68, 68, 0.35);
+}
+.calendar-day.user-mood-super-sad:hover {
+  background: linear-gradient(135deg, rgba(127, 29, 29, 0.38), rgba(127, 29, 29, 0.15)) !important;
+  border-color: rgba(127, 29, 29, 0.75) !important;
+  box-shadow: inset 0 0 16px rgba(127, 29, 29, 0.3), 0 0 15px rgba(127, 29, 29, 0.4);
+}

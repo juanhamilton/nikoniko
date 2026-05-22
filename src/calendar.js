@@ -2,7 +2,7 @@ const DAY_NAMES_SHORT = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
 export const calendar = {
   // weekStartDay: 0=Domingo, 1=Lunes, ..., 6=Sábado
-  render(container, year, month, allMoods, onDayClick, weekStartDay = 1) {
+  render(container, year, month, allMoods, selectedMember, onDayClick, weekStartDay = 1) {
     container.innerHTML = '';
 
     // Encabezados de días ordenados según el día de inicio
@@ -43,8 +43,17 @@ export const calendar = {
         dominantMood = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
       }
 
+      const userMood = selectedMember ? dayData[selectedMember] : null;
+
       const dayEl = document.createElement('div');
-      dayEl.className = `calendar-day ${dominantMood ? 'day-' + dominantMood : ''}`;
+      let classes = ['calendar-day'];
+      if (dominantMood) {
+        classes.push(`day-${dominantMood}`);
+      }
+      if (userMood) {
+        classes.push(`user-mood-${userMood}`);
+      }
+      dayEl.className = classes.join(' ');
 
       let indicatorsHtml = '';
       if (responses.length > 0) {
