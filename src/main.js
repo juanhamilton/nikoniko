@@ -53,11 +53,18 @@ const superHappyCountEl = document.getElementById('superHappyCount');
 const neutralCountEl = document.getElementById('neutralCount');
 const sadCountEl = document.getElementById('sadCount');
 const superSadCountEl = document.getElementById('superSadCount');
+const legendaryCountEl = document.getElementById('legendaryCount');
+const productiveCountEl = document.getElementById('productiveCount');
+const zenCountEl = document.getElementById('zenCount');
+const chaosCountEl = document.getElementById('chaosCount');
+const meetingsCountEl = document.getElementById('meetingsCount');
+const cacaCountEl = document.getElementById('cacaCount');
 
 // DOM Elements - Modal
 const moodModal = document.getElementById('moodModal');
 const modalDateLabel = document.getElementById('modalDate');
 const closeModalBtn = document.getElementById('closeModal');
+const clearMoodBtn = document.getElementById('clearMoodBtn');
 const moodOptions = document.querySelectorAll('.mood-option');
 
 // DOM Elements - Report
@@ -162,6 +169,8 @@ async function updateUI() {
     calendar.render(calendarGrid, year, month, allMoods, userSelect.value, (y, m, d) => {
       selectedDateStr = `${y}-${m}-${d}`;
       modalDateLabel.textContent = `${d} de ${monthNames[m]}, ${y}`;
+      const member = userSelect.value;
+      clearMoodBtn.style.display = allMoods[selectedDateStr]?.[member] ? 'block' : 'none';
       moodModal.classList.add('active');
     }, weekStartDay);
     updateStats(allMoods);
@@ -245,7 +254,7 @@ document.getElementById('nextPointsMonth').addEventListener('click', () => {
 });
 
 function updateStats(allMoods) {
-  const stats = { 'super-happy': 0, 'happy': 0, 'neutral': 0, 'sad': 0, 'super-sad': 0 };
+  const stats = { 'super-happy': 0, 'happy': 0, 'neutral': 0, 'sad': 0, 'super-sad': 0, 'legendary': 0, 'productive': 0, 'zen': 0, 'chaos': 0, 'meetings': 0, 'caca': 0 };
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
@@ -263,6 +272,12 @@ function updateStats(allMoods) {
   neutralCountEl.textContent = stats['neutral'];
   sadCountEl.textContent = stats['sad'];
   superSadCountEl.textContent = stats['super-sad'];
+  legendaryCountEl.textContent = stats['legendary'];
+  productiveCountEl.textContent = stats['productive'];
+  zenCountEl.textContent = stats['zen'];
+  chaosCountEl.textContent = stats['chaos'];
+  meetingsCountEl.textContent = stats['meetings'];
+  cacaCountEl.textContent = stats['caca'];
 }
 
 // Logic: Team Selection
@@ -377,6 +392,14 @@ weekStartSelect.addEventListener('change', () => {
 // Event Listeners - Modal
 closeModalBtn.addEventListener('click', () => moodModal.classList.remove('active'));
 
+clearMoodBtn.addEventListener('click', async () => {
+  const member = userSelect.value;
+  if (!member || !selectedDateStr) return;
+  await storage.deleteMood(currentTeam, currentPassword, selectedDateStr, member);
+  moodModal.classList.remove('active');
+  updateUI();
+});
+
 moodOptions.forEach(option => {
   option.addEventListener('click', async () => {
     const mood = option.dataset.mood;
@@ -449,11 +472,17 @@ function updateRouletteCounter() {
 
 // ── Exportar CSV ────────────────────────────────────────────────────────────
 const MOOD_LABELS = {
+  'legendary':   'Legendario',
   'super-happy': 'Muy Feliz',
   'happy':       'Feliz',
   'neutral':     'Normal',
+  'productive':  'Productivo',
+  'zen':         'Modo Zen',
   'sad':         'Mal',
+  'chaos':       'Caos Total',
+  'meetings':    'Reuniones',
   'super-sad':   'Muy Mal',
+  'caca':        'Día Caca',
 };
 
 function csvCell(value) {

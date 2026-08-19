@@ -13,6 +13,12 @@
   --mood-neutral: #f59e0b;
   --mood-sad: #ef4444;
   --mood-super-sad: #7f1d1d;
+  --mood-legendary: #facc15;
+  --mood-productive: #2dd4bf;
+  --mood-zen: #a3e635;
+  --mood-chaos: #d946ef;
+  --mood-meetings: #94a3b8;
+  --mood-caca: #92400e;
   --mood-empty: #334155;
   
   --accent-color: #6366f1;
@@ -406,6 +412,12 @@ button.nav-btn:hover {
 .dot.mood-neutral { background: var(--mood-neutral); }
 .dot.mood-sad { background: var(--mood-sad); }
 .dot.mood-super-sad { background: var(--mood-super-sad); }
+.dot.mood-legendary { background: var(--mood-legendary); }
+.dot.mood-productive { background: var(--mood-productive); }
+.dot.mood-zen { background: var(--mood-zen); }
+.dot.mood-chaos { background: var(--mood-chaos); }
+.dot.mood-meetings { background: var(--mood-meetings); }
+.dot.mood-caca { background: var(--mood-caca); }
 
 .response-count {
   position: absolute;
@@ -486,6 +498,19 @@ button.nav-btn:hover {
   border-color: var(--accent-color);
 }
 
+button.nav-btn.clear-mood-btn {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+button.nav-btn.clear-mood-btn:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.6);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
+}
+
 .members-list {
   list-style: none;
   display: flex;
@@ -524,12 +549,24 @@ button.nav-btn:hover {
 .day-neutral .mood-indicator { background: var(--mood-neutral); box-shadow: 0 0 10px var(--mood-neutral); }
 .day-sad .mood-indicator { background: var(--mood-sad); box-shadow: 0 0 10px var(--mood-sad); }
 .day-super-sad .mood-indicator { background: var(--mood-super-sad); box-shadow: 0 0 10px var(--mood-super-sad); }
+.day-legendary .mood-indicator { background: var(--mood-legendary); box-shadow: 0 0 10px var(--mood-legendary); }
+.day-productive .mood-indicator { background: var(--mood-productive); box-shadow: 0 0 10px var(--mood-productive); }
+.day-zen .mood-indicator { background: var(--mood-zen); box-shadow: 0 0 10px var(--mood-zen); }
+.day-chaos .mood-indicator { background: var(--mood-chaos); box-shadow: 0 0 10px var(--mood-chaos); }
+.day-meetings .mood-indicator { background: var(--mood-meetings); box-shadow: 0 0 10px var(--mood-meetings); }
+.day-caca .mood-indicator { background: var(--mood-caca); box-shadow: 0 0 10px var(--mood-caca); }
 
 .day-super-happy { border-color: rgba(34, 211, 238, 0.3); }
 .day-happy { border-color: rgba(16, 185, 129, 0.3); }
 .day-neutral { border-color: rgba(245, 158, 11, 0.3); }
 .day-sad { border-color: rgba(239, 68, 68, 0.3); }
 .day-super-sad { border-color: rgba(127, 29, 29, 0.3); }
+.day-legendary { border-color: rgba(250, 204, 21, 0.3); }
+.day-productive { border-color: rgba(45, 212, 191, 0.3); }
+.day-zen { border-color: rgba(163, 230, 53, 0.3); }
+.day-chaos { border-color: rgba(217, 70, 239, 0.3); }
+.day-meetings { border-color: rgba(148, 163, 184, 0.3); }
+.day-caca { border-color: rgba(146, 64, 14, 0.3); }
 
 /* Mood Selector Modal */
 .modal {
@@ -582,7 +619,7 @@ button.nav-btn:hover {
 
 .mood-options {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   gap: 0.75rem;
 }
 
@@ -621,6 +658,12 @@ button.nav-btn:hover {
 .mood-option.neutral:hover .emoji-circle { background: rgba(245, 158, 11, 0.2); border-color: var(--mood-neutral); }
 .mood-option.sad:hover .emoji-circle { background: rgba(239, 68, 68, 0.2); border-color: var(--mood-sad); }
 .mood-option.super-sad:hover .emoji-circle { background: rgba(127, 29, 29, 0.2); border-color: var(--mood-super-sad); }
+.mood-option.legendary:hover .emoji-circle { background: rgba(250, 204, 21, 0.2); border-color: var(--mood-legendary); }
+.mood-option.productive:hover .emoji-circle { background: rgba(45, 212, 191, 0.2); border-color: var(--mood-productive); }
+.mood-option.zen:hover .emoji-circle { background: rgba(163, 230, 53, 0.2); border-color: var(--mood-zen); }
+.mood-option.chaos:hover .emoji-circle { background: rgba(217, 70, 239, 0.2); border-color: var(--mood-chaos); }
+.mood-option.meetings:hover .emoji-circle { background: rgba(148, 163, 184, 0.2); border-color: var(--mood-meetings); }
+.mood-option.caca:hover .emoji-circle { background: rgba(146, 64, 14, 0.2); border-color: var(--mood-caca); }
 
 /* Report cell moods */
 .cell-super-happy { background: rgba(34, 211, 238, 0.2); border: 1px solid var(--mood-super-happy); }
@@ -628,6 +671,12 @@ button.nav-btn:hover {
 .cell-neutral { background: rgba(245, 158, 11, 0.2); border: 1px solid var(--mood-neutral); }
 .cell-sad { background: rgba(239, 68, 68, 0.2); border: 1px solid var(--mood-sad); }
 .cell-super-sad { background: rgba(127, 29, 29, 0.2); border: 1px solid var(--mood-super-sad); }
+.cell-legendary { background: rgba(250, 204, 21, 0.2); border: 1px solid var(--mood-legendary); }
+.cell-productive { background: rgba(45, 212, 191, 0.2); border: 1px solid var(--mood-productive); }
+.cell-zen { background: rgba(163, 230, 53, 0.2); border: 1px solid var(--mood-zen); }
+.cell-chaos { background: rgba(217, 70, 239, 0.2); border: 1px solid var(--mood-chaos); }
+.cell-meetings { background: rgba(148, 163, 184, 0.2); border: 1px solid var(--mood-meetings); }
+.cell-caca { background: rgba(146, 64, 14, 0.2); border: 1px solid var(--mood-caca); }
 
 .mood-label {
   font-size: 0.8rem;
@@ -1023,6 +1072,36 @@ button.nav-btn.export-btn:hover {
   border-color: rgba(127, 29, 29, 0.55) !important;
   box-shadow: inset 0 0 12px rgba(127, 29, 29, 0.2);
 }
+.calendar-day.user-mood-legendary {
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.18), rgba(250, 204, 21, 0.05)) !important;
+  border-color: rgba(250, 204, 21, 0.45) !important;
+  box-shadow: inset 0 0 12px rgba(250, 204, 21, 0.15);
+}
+.calendar-day.user-mood-productive {
+  background: linear-gradient(135deg, rgba(45, 212, 191, 0.18), rgba(45, 212, 191, 0.05)) !important;
+  border-color: rgba(45, 212, 191, 0.45) !important;
+  box-shadow: inset 0 0 12px rgba(45, 212, 191, 0.15);
+}
+.calendar-day.user-mood-zen {
+  background: linear-gradient(135deg, rgba(163, 230, 53, 0.18), rgba(163, 230, 53, 0.05)) !important;
+  border-color: rgba(163, 230, 53, 0.45) !important;
+  box-shadow: inset 0 0 12px rgba(163, 230, 53, 0.15);
+}
+.calendar-day.user-mood-chaos {
+  background: linear-gradient(135deg, rgba(217, 70, 239, 0.18), rgba(217, 70, 239, 0.05)) !important;
+  border-color: rgba(217, 70, 239, 0.45) !important;
+  box-shadow: inset 0 0 12px rgba(217, 70, 239, 0.15);
+}
+.calendar-day.user-mood-meetings {
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.18), rgba(148, 163, 184, 0.05)) !important;
+  border-color: rgba(148, 163, 184, 0.45) !important;
+  box-shadow: inset 0 0 12px rgba(148, 163, 184, 0.15);
+}
+.calendar-day.user-mood-caca {
+  background: linear-gradient(135deg, rgba(146, 64, 14, 0.28), rgba(146, 64, 14, 0.1)) !important;
+  border-color: rgba(146, 64, 14, 0.55) !important;
+  box-shadow: inset 0 0 12px rgba(146, 64, 14, 0.2);
+}
 
 /* User Selection Day Hover Effects */
 .calendar-day.user-mood-super-happy:hover {
@@ -1049,4 +1128,34 @@ button.nav-btn.export-btn:hover {
   background: linear-gradient(135deg, rgba(127, 29, 29, 0.38), rgba(127, 29, 29, 0.15)) !important;
   border-color: rgba(127, 29, 29, 0.75) !important;
   box-shadow: inset 0 0 16px rgba(127, 29, 29, 0.3), 0 0 15px rgba(127, 29, 29, 0.4);
+}
+.calendar-day.user-mood-legendary:hover {
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.28), rgba(250, 204, 21, 0.1)) !important;
+  border-color: rgba(250, 204, 21, 0.65) !important;
+  box-shadow: inset 0 0 16px rgba(250, 204, 21, 0.25), 0 0 15px rgba(250, 204, 21, 0.35);
+}
+.calendar-day.user-mood-productive:hover {
+  background: linear-gradient(135deg, rgba(45, 212, 191, 0.28), rgba(45, 212, 191, 0.1)) !important;
+  border-color: rgba(45, 212, 191, 0.65) !important;
+  box-shadow: inset 0 0 16px rgba(45, 212, 191, 0.25), 0 0 15px rgba(45, 212, 191, 0.35);
+}
+.calendar-day.user-mood-zen:hover {
+  background: linear-gradient(135deg, rgba(163, 230, 53, 0.28), rgba(163, 230, 53, 0.1)) !important;
+  border-color: rgba(163, 230, 53, 0.65) !important;
+  box-shadow: inset 0 0 16px rgba(163, 230, 53, 0.25), 0 0 15px rgba(163, 230, 53, 0.35);
+}
+.calendar-day.user-mood-chaos:hover {
+  background: linear-gradient(135deg, rgba(217, 70, 239, 0.28), rgba(217, 70, 239, 0.1)) !important;
+  border-color: rgba(217, 70, 239, 0.65) !important;
+  box-shadow: inset 0 0 16px rgba(217, 70, 239, 0.25), 0 0 15px rgba(217, 70, 239, 0.35);
+}
+.calendar-day.user-mood-meetings:hover {
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.28), rgba(148, 163, 184, 0.1)) !important;
+  border-color: rgba(148, 163, 184, 0.65) !important;
+  box-shadow: inset 0 0 16px rgba(148, 163, 184, 0.25), 0 0 15px rgba(148, 163, 184, 0.35);
+}
+.calendar-day.user-mood-caca:hover {
+  background: linear-gradient(135deg, rgba(146, 64, 14, 0.38), rgba(146, 64, 14, 0.15)) !important;
+  border-color: rgba(146, 64, 14, 0.75) !important;
+  box-shadow: inset 0 0 16px rgba(146, 64, 14, 0.3), 0 0 15px rgba(146, 64, 14, 0.4);
 }

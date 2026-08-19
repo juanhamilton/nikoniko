@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calendario Niko-Niko | Felicidad del Equipo</title>
     <meta name="description" content="Un Calendario Niko-Niko premium para seguir el estado de ánimo y la productividad de tu equipo diariamente." />
-    <script type="module" crossorigin src="/assets/index-DFRAEQjQ.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-C9gDa-ql.css">
+    <script type="module" crossorigin src="/assets/index-CXgOxriH.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BwKGhWYN.css">
   </head>
   <body>
     <div id="app">
@@ -127,6 +127,30 @@
             <div class="stat-card">
               <div id="superSadCount" class="stat-value" style="color: var(--mood-super-sad)">0</div>
               <div class="stat-label">Muy Mal</div>
+            </div>
+            <div class="stat-card">
+              <div id="legendaryCount" class="stat-value" style="color: var(--mood-legendary)">0</div>
+              <div class="stat-label">Legendarios</div>
+            </div>
+            <div class="stat-card">
+              <div id="productiveCount" class="stat-value" style="color: var(--mood-productive)">0</div>
+              <div class="stat-label">Productivos</div>
+            </div>
+            <div class="stat-card">
+              <div id="zenCount" class="stat-value" style="color: var(--mood-zen)">0</div>
+              <div class="stat-label">Zens</div>
+            </div>
+            <div class="stat-card">
+              <div id="chaosCount" class="stat-value" style="color: var(--mood-chaos)">0</div>
+              <div class="stat-label">Caos Total</div>
+            </div>
+            <div class="stat-card">
+              <div id="meetingsCount" class="stat-value" style="color: var(--mood-meetings)">0</div>
+              <div class="stat-label">Reuniones</div>
+            </div>
+            <div class="stat-card">
+              <div id="cacaCount" class="stat-value" style="color: var(--mood-caca)">0</div>
+              <div class="stat-label">Días Caca</div>
             </div>
           </div>
         </section>
@@ -254,9 +278,35 @@
               <div class="emoji-circle">😫</div>
               <span class="mood-label">MUY MAL</span>
             </div>
+            <div class="mood-option legendary" data-mood="legendary">
+              <div class="emoji-circle">🦸</div>
+              <span class="mood-label">LEGENDARIO</span>
+            </div>
+            <div class="mood-option productive" data-mood="productive">
+              <div class="emoji-circle">💪</div>
+              <span class="mood-label">PRODUCTIVO</span>
+            </div>
+            <div class="mood-option zen" data-mood="zen">
+              <div class="emoji-circle">🧘</div>
+              <span class="mood-label">MODO ZEN</span>
+            </div>
+            <div class="mood-option chaos" data-mood="chaos">
+              <div class="emoji-circle">🤯</div>
+              <span class="mood-label">CAOS TOTAL</span>
+            </div>
+            <div class="mood-option meetings" data-mood="meetings">
+              <div class="emoji-circle">🥱</div>
+              <span class="mood-label">REUNIONES</span>
+            </div>
+            <div class="mood-option caca" data-mood="caca">
+              <div class="emoji-circle">💩</div>
+              <span class="mood-label">DÍA CACA</span>
+            </div>
           </div>
           
-          <button id="closeModal" class="nav-btn" style="margin-top: 2rem; width: 100%">Cancelar</button>
+          <button id="clearMoodBtn" class="nav-btn clear-mood-btn" style="margin-top: 1rem; width: 100%; display: none">🗑 Eliminar emoción del día</button>
+          
+          <button id="closeModal" class="nav-btn" style="margin-top: 1rem; width: 100%">Cancelar</button>
         </div>
       </div>
     </div>

@@ -1,5 +1,19 @@
 const DAY_NAMES_SHORT = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
+const EMOJI_MAP = {
+  'legendary':   '🦸',
+  'super-happy': '🤩',
+  'happy':       '😊',
+  'neutral':     '😐',
+  'productive':  '💪',
+  'zen':         '🧘',
+  'sad':         '☹️',
+  'chaos':       '🤯',
+  'meetings':    '🥱',
+  'super-sad':   '😫',
+  'caca':        '💩',
+};
+
 export const report = {
   // weekStartDay: 0=Dom, 1=Lun, ..., 6=Sáb
   renderWeekly(headerRow, bodyContainer, membersList, allMoods, startDate, weekStartDay = 1) {
@@ -31,14 +45,7 @@ export const report = {
 
         const td = document.createElement('td');
         if (mood) {
-          const emojiMap = {
-            'super-happy': '🤩',
-            'happy': '😊',
-            'neutral': '😐',
-            'sad': '☹️',
-            'super-sad': '😫'
-          };
-          td.innerHTML = `<div class="report-cell-mood cell-${mood}">${emojiMap[mood]}</div>`;
+          td.innerHTML = `<div class="report-cell-mood cell-${mood}">${EMOJI_MAP[mood]}</div>`;
         } else {
           td.innerHTML = `<div class="report-cell-mood" style="opacity: 0.1">?</div>`;
         }

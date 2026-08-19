@@ -130,6 +130,21 @@ api.post('/:teamId/moods', validateTeam, async (req, res) => {
   }
 });
 
+// DELETE /api/:teamId/moods — eliminar estado de ánimo de un día
+api.delete('/:teamId/moods', validateTeam, async (req, res) => {
+  try {
+    const { teamId } = req.params;
+    const { dateStr, member } = req.body;
+    await teams().updateOne(
+      { _id: teamId },
+      { $unset: { [`moods.${dateStr}.${member}`]: '' } }
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/:teamId/points?month=2026-5
 api.get('/:teamId/points', validateTeam, async (req, res) => {
   try {

@@ -17,6 +17,22 @@ export const storage = {
     }
   },
 
+  async deleteMood(teamId, password, dateStr, member) {
+    try {
+      const response = await fetch(`${API_BASE}/${encodeURIComponent(teamId)}/moods`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-team-password': password
+        },
+        body: JSON.stringify({ dateStr, member })
+      });
+      return await response.json();
+    } catch (error) {
+      console.error('Error deleting mood:', error);
+    }
+  },
+
   async getAll(teamId, password) {
     try {
       const response = await fetch(`${API_BASE}/${encodeURIComponent(teamId)}/moods`, {
