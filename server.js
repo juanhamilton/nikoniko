@@ -115,14 +115,15 @@ api.get('/:teamId/moods', validateTeam, (req, res) => {
   res.json(req.team.moods);
 });
 
-// POST /api/:teamId/moods — registrar estado de ánimo
+// POST /api/:teamId/moods — registrar estado de ánimo (con reseña opcional)
 api.post('/:teamId/moods', validateTeam, async (req, res) => {
   try {
     const { teamId } = req.params;
-    const { dateStr, member, mood } = req.body;
+    const { dateStr, member, mood, comment } = req.body;
+    const cleanComment = typeof comment === 'string' ? comment.trim().slice(0, 500) : '';
     await teams().updateOne(
       { _id: teamId },
-      { $set: { [`moods.${dateStr}.${member}`]: mood } }
+      { $set: { [`moods.${dateStr}.${member}`]: { mood, comment: cleanComment } } }
     );
     res.json({ success: true });
   } catch (err) {

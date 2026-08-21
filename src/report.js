@@ -28,6 +28,14 @@ const MOOD_LABELS = {
   'caca':        'Día Caca',
 };
 
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 export const report = {
   // weekStartDay: 0=Dom, 1=Lun, ..., 6=Sáb
   renderWeekly(headerRow, bodyContainer, membersList, allMoods, startDate, weekStartDay = 1) {
@@ -55,11 +63,15 @@ export const report = {
 
       dateObjects.forEach(date => {
         const dateStr = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-        const mood = allMoods[dateStr] ? allMoods[dateStr][member] : null;
+        const rawEntry = allMoods[dateStr] ? allMoods[dateStr][member] : null;
+        const entry = typeof rawEntry === 'string' ? { mood: rawEntry, comment: '' } : rawEntry;
 
         const td = document.createElement('td');
-        if (mood) {
-          td.innerHTML = `<div class="report-cell-mood cell-${mood}" title="${MOOD_LABELS[mood] || mood}">${EMOJI_MAP[mood]}</div>`;
+        if (entry?.mood) {
+          const label = MOOD_LABELS[entry.mood] || entry.mood;
+          const tooltip = entry.comment ? `${label}: ${entry.comment}` : label;
+          const badge = entry.comment ? '<span class="comment-badge" title="Con reseña">💬</span>' : '';
+          td.innerHTML = `<div class="report-cell-mood cell-${entry.mood}" title="${escapeHtml(tooltip)}">${EMOJI_MAP[entry.mood]}${badge}</div>`;
         } else {
           td.innerHTML = `<div class="report-cell-mood" style="opacity: 0.1">?</div>`;
         }

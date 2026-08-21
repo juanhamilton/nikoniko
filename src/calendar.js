@@ -1,5 +1,10 @@
 const DAY_NAMES_SHORT = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
+// Normaliza entradas legadas (string) al formato { mood, comment }
+function toEntry(entry) {
+  return typeof entry === 'string' ? { mood: entry, comment: '' } : entry;
+}
+
 export const calendar = {
   // weekStartDay: 0=Domingo, 1=Lunes, ..., 6=Sábado
   render(container, year, month, allMoods, selectedMember, onDayClick, weekStartDay = 1) {
@@ -32,7 +37,8 @@ export const calendar = {
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = `${year}-${month}-${day}`;
       const dayData = allMoods[dateStr] || {};
-      const responses = Object.values(dayData);
+      const entries = Object.entries(dayData).map(([member, entry]) => [member, toEntry(entry)]);
+      const responses = entries.map(([, entry]) => entry.mood);
 
       let dominantMood = '';
       if (responses.length > 0) {
@@ -43,7 +49,8 @@ export const calendar = {
         dominantMood = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
       }
 
-      const userMood = selectedMember ? dayData[selectedMember] : null;
+      const userEntry = selectedMember ? toEntry(dayData[selectedMember]) : null;
+      const userMood = userEntry?.mood || null;
 
       const dayEl = document.createElement('div');
       let classes = ['calendar-day'];
@@ -69,6 +76,12 @@ export const calendar = {
         ${indicatorsHtml}
         ${responses.length > 0 ? `<span class="response-count">${responses.length}</span>` : ''}
       `;
+
+      // Tooltip con las reseñas del día (si las hay)
+      const comments = entries.filter(([, entry]) => entry.comment);
+      if (comments.length > 0) {
+        dayEl.title = comments.map(([member, entry]) => `${member}: ${entry.comment}`).join('\n');
+      }
 
       dayEl.addEventListener('click', () => onDayClick(year, month, day));
       container.appendChild(dayEl);

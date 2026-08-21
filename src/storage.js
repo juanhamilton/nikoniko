@@ -1,7 +1,7 @@
 const API_BASE = '/api';
 
 export const storage = {
-  async saveMood(teamId, password, dateStr, member, mood) {
+  async saveMood(teamId, password, dateStr, member, mood, comment = '') {
     try {
       const response = await fetch(`${API_BASE}/${encodeURIComponent(teamId)}/moods`, {
         method: 'POST',
@@ -9,7 +9,7 @@ export const storage = {
           'Content-Type': 'application/json',
           'x-team-password': password
         },
-        body: JSON.stringify({ dateStr, member, mood })
+        body: JSON.stringify({ dateStr, member, mood, comment })
       });
       return await response.json();
     } catch (error) {
@@ -38,7 +38,17 @@ export const storage = {
       const response = await fetch(`${API_BASE}/${encodeURIComponent(teamId)}/moods`, {
         headers: { 'x-team-password': password }
       });
-      return await response.json();
+      const data = await response.json();
+      // Normalizar entradas legadas (string) al formato { mood, comment }
+      Object.keys(data).forEach(dateStr => {
+        const day = data[dateStr];
+        Object.keys(day).forEach(member => {
+          if (typeof day[member] === 'string') {
+            day[member] = { mood: day[member], comment: '' };
+          }
+        });
+      });
+      return data;
     } catch (error) {
       console.error('Error fetching moods:', error);
       return {};

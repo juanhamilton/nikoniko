@@ -63,9 +63,19 @@ const cacaCountEl = document.getElementById('cacaCount');
 // DOM Elements - Modal
 const moodModal = document.getElementById('moodModal');
 const modalDateLabel = document.getElementById('modalDate');
+const moodCommentInput = document.getElementById('moodCommentInput');
+const saveMoodBtn = document.getElementById('saveMoodBtn');
 const closeModalBtn = document.getElementById('closeModal');
 const clearMoodBtn = document.getElementById('clearMoodBtn');
 const moodOptions = document.querySelectorAll('.mood-option');
+
+let selectedMood = null;
+
+function setSelectedMood(mood) {
+  selectedMood = mood;
+  moodOptions.forEach(option => option.classList.toggle('selected', option.dataset.mood === mood));
+  saveMoodBtn.disabled = !mood;
+}
 
 // DOM Elements - Report
 const reportHeader = document.getElementById('reportHeader');
@@ -170,7 +180,10 @@ async function updateUI() {
       selectedDateStr = `${y}-${m}-${d}`;
       modalDateLabel.textContent = `${d} de ${monthNames[m]}, ${y}`;
       const member = userSelect.value;
-      clearMoodBtn.style.display = allMoods[selectedDateStr]?.[member] ? 'block' : 'none';
+      const existingEntry = allMoods[selectedDateStr]?.[member];
+      setSelectedMood(existingEntry?.mood || null);
+      moodCommentInput.value = existingEntry?.comment || '';
+      clearMoodBtn.style.display = existingEntry ? 'block' : 'none';
       moodModal.classList.add('active');
     }, weekStartDay);
     updateStats(allMoods);
@@ -261,7 +274,8 @@ function updateStats(allMoods) {
   Object.keys(allMoods).forEach(dateStr => {
     const [dYear, dMonth] = dateStr.split('-').map(Number);
     if (dYear === year && dMonth === month) {
-      Object.values(allMoods[dateStr]).forEach(mood => {
+      Object.values(allMoods[dateStr]).forEach(entry => {
+        const mood = entry?.mood;
         if (stats[mood] !== undefined) stats[mood]++;
       });
     }
@@ -401,15 +415,18 @@ clearMoodBtn.addEventListener('click', async () => {
 });
 
 moodOptions.forEach(option => {
-  option.addEventListener('click', async () => {
-    const mood = option.dataset.mood;
-    const member = userSelect.value;
-    if (!member) return alert('Por favor, selecciona un integrante primero.');
-    
-    await storage.saveMood(currentTeam, currentPassword, selectedDateStr, member, mood);
-    moodModal.classList.remove('active');
-    updateUI();
+  option.addEventListener('click', () => {
+    setSelectedMood(option.dataset.mood);
   });
+});
+
+saveMoodBtn.addEventListener('click', async () => {
+  const member = userSelect.value;
+  if (!selectedMood || !member || !selectedDateStr) return;
+
+  await storage.saveMood(currentTeam, currentPassword, selectedDateStr, member, selectedMood, moodCommentInput.value.trim());
+  moodModal.classList.remove('active');
+  updateUI();
 });
 
 // Event Listeners - Report
@@ -511,7 +528,7 @@ function downloadCSV() {
     const dateLabel = `${String(day).padStart(2,'0')}/${String(month + 1).padStart(2,'0')}/${year}`;
     const dayName  = DAY_NAMES[dateObj.getDay()];
     const dayData  = allMoods[dateStr] || {};
-    const cells    = [dateLabel, dayName, ...sortedMembers.map(m => MOOD_LABELS[dayData[m]] || '')];
+    const cells    = [dateLabel, dayName, ...sortedMembers.map(m => MOOD_LABELS[dayData[m]?.mood] || '')];
     rows.push(cells.map(csvCell).join(','));
   }
 
